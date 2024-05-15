@@ -2,6 +2,10 @@
 #include <stdbool.h>
 #include "atexit.h"
 
+#include <unistd.h>
+#define WRITE(string)\
+    write(1, string, sizeof(string))
+
 static size_t HEAP_MAX_SIZE = 4000000000;  //approx 4GB, exact size doesn't matter since linux uses optimistic memory allocation
 
 typedef struct
@@ -22,7 +26,7 @@ void handle_exit() {
 }
 
 
-void *malloc(size_t size) {
+extern void *b_malloc(long long size) {
     //init is required
     if (globalalloc.is_initalized == 0) {
         bumpalloc_t bumpalloc = bumpalloc_create(HEAP_MAX_SIZE);
@@ -37,7 +41,7 @@ void *malloc(size_t size) {
 }
 
 // The free function
-void free(void* ptr) {
+extern void b_free(void* ptr) {
     if (globalalloc.is_initalized) {
         bumpalloc_free(globalalloc.bumpalloc, ptr);
     }

@@ -1,5 +1,8 @@
-// expose only atexit from stdlib.h
+#ifndef ATEXIT_H
+    #define ATEXIT_H 1
 
-#include <stdlib.h>
-extern int atexit(void (*func)(void));
+    // expose only atexit from stdlib.h
 
+    extern int atexit(void (*func)(void));
+
+#endif
