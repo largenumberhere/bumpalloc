@@ -3,7 +3,8 @@ OUT_TEST=build/test/gcc-lin-x64
 OUT_TEST2=build/test2/gcc-lin-x64
 OUT_LIB=build/lib/gcc-lin-x64
 SRC=src
-CFLAGS=-Wall -Wextra
+CC=gcc
+# CFLAGS=-Wall -Wextra
 LIB_EXPORT=lib
 H=src
 
@@ -26,21 +27,21 @@ clean:
 
 # build the actual allocator
 bumpalloc:
-	gcc -c $(SRC)/bumpalloc.c -o $(OUT_LIB)/bumpalloc.a
+	$(CC) -c $(SRC)/bumpalloc.c -o $(OUT_LIB)/bumpalloc.a
 
 # build the malloc wrapper for the allocator
 bumpalloc_wrapper: bumpalloc
-	gcc -c $(SRC)/bumpalloc_wrapper.c -L$(H)/bumpalloc_wrapper.h -o $(OUT_LIB)/bumpalloc_wrapper.a
+	$(CC) -c $(SRC)/bumpalloc_wrapper.c -L$(H)/bumpalloc_wrapper.h -o $(OUT_LIB)/bumpalloc_wrapper.a
 
 
 # check that bump allocator works
 test1: bumpalloc
-	gcc $(SRC)/test.c $(OUT_LIB)/bumpalloc.a -o $(OUT_TEST)/test
+	$(CC) $(SRC)/test.c $(OUT_LIB)/bumpalloc.a -o $(OUT_TEST)/test
 	$(OUT_TEST)/test
 
 # check that the wrapper works
 test2: bumpalloc_wrapper bumpalloc
-	gcc $(CFLAGS) $(SRC)/test2.c -o $(OUT_TEST2)/test2 $(OUT_LIB)/bumpalloc_wrapper.a $(OUT_LIB)/bumpalloc.a $(H)/atexit.h $(H)/bumpalloc.h $(H)/bumpalloc_wrapper.h  -L$(H)/atexit.a
+	$(CC) $(SRC)/test2.c -o $(OUT_TEST2)/test2 $(OUT_LIB)/bumpalloc_wrapper.a $(OUT_LIB)/bumpalloc.a $(H)/atexit.h $(H)/bumpalloc.h $(H)/bumpalloc_wrapper.h  -L$(H)/atexit.a
 	$(OUT_TEST2)/test2
 
 # todo: export lib
